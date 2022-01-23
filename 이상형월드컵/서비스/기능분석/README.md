@@ -78,7 +78,7 @@ User --> (MyPage)
 
 > - OAuth2 로 진행된다.
 > - OAuth2 은 기본적인 정보활용 동의를 구한다.
-> - IDP(IDentity Provider)의 제공정보로 회원정보로 활용한다.
+> - IDP(IDentity Provider)의 제공정보를 회원정보로 활용한다.
 
 ```mermaid
 flowchart LR
