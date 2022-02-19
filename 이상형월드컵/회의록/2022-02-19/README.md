@@ -23,7 +23,13 @@
 
 -----
 **석찬**
+작업 진행
+* Account Server
+  * Exception Hanlder
+* Game Server
+  * Entity 설계 수정
 
+* 해당 내용이 없다면 작성하지 않아도 된다.
 
 ------
 **윤진**
