@@ -28,6 +28,7 @@
 * 폰트 수정
 * Home Slider UI 빈여백 해결
 * 카테고리 관련 기능 생각, 고려 
+* 이미지 중복 안되게 하기
 * https://github.com/code-etc/code-etc-worldcup-frontend/issues/10
 -----
 **석찬**
