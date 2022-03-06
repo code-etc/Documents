@@ -63,7 +63,7 @@ oauth 해당 redirect 으로 query param 제공
 -----
 ### spring oauth flow
 
-![oauth flow](https://github.com/code-etc/code-etc-worldcup-backend-auth/blob/develop/image/oauth-flow.png)
+![oauth flow](../image/oauth-flow.png)
 
 ------
 
