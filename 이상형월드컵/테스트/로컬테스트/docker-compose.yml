@@ -1,0 +1,57 @@
+version: '3'
+services:
+  discovery:
+    image: tjwjdgks43/code-etc-beta:discovery.0.0
+    container_name: discovery
+    expose:
+      - "8761"
+  auth-service:
+    image: tjwjdgks43/code-etc-beta:auth.0.0
+    container_name: auth-service
+    expose:
+      - "8080"
+    depends_on:
+      - "discovery"
+    environment:
+      - EUREKA_SERVER=http://discovery:8761/eureka
+
+  mysql-database:
+    image: mysql:latest
+    container_name: mysql-database
+    ports:
+      - "127.0.0.1:3306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 1234
+      MYSQL_DATABASE: test
+  account-service:
+    image: tjwjdgks43/code-etc-beta:account.0.0
+    container_name: account-service
+    expose:
+      - "8080"
+    depends_on:
+      - mysql-database
+    environment:
+      - EUREKA_SERVER=http://discovery:8761/eureka
+
+  game-service:
+    image: tjwjdgks43/code-etc-beta:game.0.0
+    container_name: game-service
+    expose:
+      - "8080"
+    depends_on:
+      - mysql-database
+    environment:
+      - EUREKA_SERVER=http://discovery:8761/eureka
+
+  gateway:
+    image: tjwjdgks43/code-etc-beta:gateway.0.0
+    container_name: gateway
+    ports:
+      - "127.0.0.1:8080:8080"
+    depends_on:
+      - discovery
+      - auth-service
+      - account-service
+      - game-service
+    environment:
+      - EUREKA_SERVER=http://discovery:8761/eureka
