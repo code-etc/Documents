@@ -1,30 +1,41 @@
 version: '3'
 services:
+  config:
+    image: tjwjdgks43/code-etc-beta:${CONFIG_VERSION}
+    container_name: config
+    expose:
+      - "8888"
+    restart: on-failure
   discovery:
-    image: tjwjdgks43/code-etc-beta:discovery.0.0
+    image: tjwjdgks43/code-etc-beta:${DISCOVERY_VERSION}
     container_name: discovery
     expose:
       - "8761"
+    restart: on-failure
   auth-service:
-    image: tjwjdgks43/code-etc-beta:auth.0.0
+    image: tjwjdgks43/code-etc-beta:${AUTH_VERSION}
     container_name: auth-service
     expose:
       - "8080"
     depends_on:
       - "discovery"
     environment:
-      - EUREKA_SERVER=http://discovery:8761/eureka
-
+      CONFIG_SERVER: http://config:8888/
+      EUREKA_SERVER: http://discovery:8761/eureka
+      GATEWAY: ${GATEWAY_IP}
+      WAIT_HOSTS: discovery:8761,config:8888
+    restart: on-failure
   mysql-database:
-    image: mysql:latest
+    image: mysql:${MYSQL_VERSION}
     container_name: mysql-database
     ports:
       - "127.0.0.1:3306:3306"
     environment:
       MYSQL_ROOT_PASSWORD: 1234
       MYSQL_DATABASE: test
+    restart: on-failure
   account-service:
-    image: tjwjdgks43/code-etc-beta:account.0.0
+    image: putstack/account-service:${ACCOUNT_VERSION}
     container_name: account-service
     expose:
       - "8080"
@@ -32,9 +43,9 @@ services:
       - mysql-database
     environment:
       - EUREKA_SERVER=http://discovery:8761/eureka
-
+    restart: on-failure
   game-service:
-    image: tjwjdgks43/code-etc-beta:game.0.0
+    image: putstack/game-service:${GAME_VERSION}
     container_name: game-service
     expose:
       - "8080"
@@ -42,9 +53,9 @@ services:
       - mysql-database
     environment:
       - EUREKA_SERVER=http://discovery:8761/eureka
-
+    restart: on-failure
   gateway:
-    image: tjwjdgks43/code-etc-beta:gateway.0.0
+    image: tjwjdgks43/code-etc-beta:gateway.0.2
     container_name: gateway
     ports:
       - "127.0.0.1:8080:8080"
@@ -54,4 +65,13 @@ services:
       - account-service
       - game-service
     environment:
-      - EUREKA_SERVER=http://discovery:8761/eureka
+      EUREKA_SERVER: http://discovery:8761/eureka
+    restart: on-failure
+networks:
+  default:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: ${SUBNET}
+          ip_range: ${IP_RANGE}
+          gateway: ${GATEWAY_IP}
