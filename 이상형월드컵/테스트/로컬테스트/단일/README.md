@@ -1,9 +1,10 @@
 # 단일 Docker 이미지 테스트
 
 ### 사용한 이미지
-* tjwjdgks43/code-etc-authserver:v.0.3
+* tjwjdgks43/code-etc-authserver:v.0.4
 * tjwjdgks43/code-etc-gateway:v.0.0
 * tjwjdgks43/code-etc-beta:discovery.0.0
+* tjwjdgks43/code-etc-beta:config.0.0
 * mysql:latest
 ```
 요구 사항 
@@ -12,7 +13,7 @@ auth 서버 포트 8080:8080
 gateway 서버 포트 8888:8080 (기존 8080포트에서 8888 포트로 변경했습니다)
 discovery 서버 포트 8761:8761
 mysql db 포트 3306:3306
-
+config 서버 포트 7777:8888
 account 서버 포트 8081:<>(외부 포트는 8081 강제)
 game 서버 포트 8082:<>(외부 포트는 8082 강제)
 ```
