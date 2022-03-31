@@ -77,7 +77,7 @@ services:
       - EUREKA_SERVER=http://discovery:8761/eureka
     restart: on-failure
   gateway:
-    image: tjwjdgks43/code-etc-beta:gateway.0.2
+    image: tjwjdgks43/code-etc-beta:${GATEWAY_VERSION}
     container_name: gateway
     ports:
       - "127.0.0.1:8080:8080"
