@@ -1,10 +1,31 @@
 version: '3'
 services:
+  zookeeper:
+    image: 'bitnami/zookeeper:latest'
+    ports:
+      - '2181:2181'
+    environment:
+      - ALLOW_ANONYMOUS_LOGIN=yes
+  kafka:
+    image: 'bitnami/kafka:latest'
+    ports:
+      - '9093:9093'
+    environment:
+      - KAFKA_CFG_ZOOKEEPER_CONNECT=zookeeper:2181
+      - ALLOW_PLAINTEXT_LISTENER=yes
+      - KAFKA_CFG_LISTENER_SECURITY_PROTOCOL_MAP=CLIENT:PLAINTEXT,EXTERNAL:PLAINTEXT
+      - KAFKA_CFG_LISTENERS=CLIENT://:9092,EXTERNAL://:9093
+      - KAFKA_CFG_ADVERTISED_LISTENERS=CLIENT://kafka:9092,EXTERNAL://localhost:9093
+      - KAFKA_CFG_INTER_BROKER_LISTENER_NAME=CLIENT
+    depends_on:
+      - zookeeper
   config:
     image: tjwjdgks43/code-etc-beta:${CONFIG_VERSION}
     container_name: config
-    expose:
-      - "8888"
+    ports:
+      - "127.0.0.1:8888:8888"
+    environment:
+      KAFKA: http://kafka:9092
     restart: on-failure
   discovery:
     image: tjwjdgks43/code-etc-beta:${DISCOVERY_VERSION}
@@ -20,6 +41,7 @@ services:
     depends_on:
       - "discovery"
     environment:
+      KAFKA: http://kafka:9092
       CONFIG_SERVER: http://config:8888/
       EUREKA_SERVER: http://discovery:8761/eureka
       GATEWAY: ${GATEWAY_IP}
